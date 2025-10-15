@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Você Prefere...? 💭</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <h1>Você prefere...? 💭</h1>
+
+    <div class="timer-bar">
+      <div id="timer-progress"></div>
+    </div>
+
+    <div class="card">
+      <p id="question">Clique em "Começar" para iniciar!</p>
+      <div class="options hidden" id="options">
+        <button id="optionA"></button>
+        <p class="ou">ou</p>
+        <button id="optionB"></button>
+      </div>
+    </div>
+
+    <div id="result" class="hidden"></div>
+    <button id="next-btn" class="hidden">Próxima Pergunta ➡️</button>
+    <button id="start-btn">Começar 🚀</button>
+
+    <p id="progress-text"></p>
+  </div>
+
+  <!-- 🔹 Seu script principal do jogo -->
+  <script src="script.js" type="module"></script>
+
+  <!-- 🔹 SDK do Firebase (cole aqui o trecho completo do Firebase) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYcL4cw6P6gs9HJpAUIDyMES5TpC0sqDY",
+      authDomain: "voce-prefere-23560.firebaseapp.com",
+      projectId: "voce-prefere-23560",
+      storageBucket: "voce-prefere-23560.firebasestorage.app",
+      messagingSenderId: "382049800293",
+      appId: "1:382049800293:web:05c67b5846cdfe6354b68c",
+      measurementId: "G-S25LWEH4EF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Função global de votação
+    window.votar = async function(perguntaId, escolha) {
+      const docRef = doc(db, "perguntas", String(perguntaId));
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        await setDoc(docRef, { A: 0, B: 0 });
+      }
+
+      await updateDoc(docRef, { [escolha]: increment(1) });
+
+      const updatedSnap = await getDoc(docRef);
+      const data = updatedSnap.data();
+      const total = (data.A || 0) + (data.B || 0);
+      const percentA = total > 0 ? Math.round((data.A / total) * 100) : 0;
+      const percentB = total > 0 ? 100 - percentA : 0;
+
+      return { percentA, percentB };
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz 💡</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <h1>Quiz 💡</h1>
+    <div class="card">
+      <p id="quiz-question">Clique em "Começar" para iniciar!</p>
+      <div id="quiz-options" class="options hidden"></div>
+    </div>
+
+    <div id="quiz-result" class="hidden"></div>
+    <button id="quiz-next-btn" class="hidden">Próxima ➡️</button>
+    <button id="quiz-start-btn">Começar 🚀</button>
+
+    <button onclick="window.location.href='index.html'" style="margin-top: 30px; background: none; border: none; color: var(--accent); cursor: pointer;">⬅️ Voltar</button>
+  </div>
+
+  <script type="module" src="quizGame.js"></script>
+</body>
+</html>
